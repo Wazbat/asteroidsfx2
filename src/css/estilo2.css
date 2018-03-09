@@ -1,0 +1,41 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 09-Feb-2018, 14:08:47
+    Author     : Wazbat
+*/
+
+
+#nave{
+   -fx-fill: black; 
+   -fx-stroke: red;
+}
+#ufo{
+   -fx-fill: black; 
+   -fx-stroke: red; 
+}
+
+#fuego1{
+   -fx-fill: black; 
+   -fx-stroke: red;    
+}
+
+#fuego2{
+   -fx-fill: black; 
+   -fx-stroke: red; 
+}
+#escudo{
+   -fx-fill: black; 
+   -fx-stroke: red; 
+}
+#escudoDentro{
+   -fx-fill: black; 
+   -fx-stroke: red;  
+}
+#asteroide{
+   -fx-fill: black; 
+   -fx-stroke: red;  
+}
