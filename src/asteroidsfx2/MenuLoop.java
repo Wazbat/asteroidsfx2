@@ -35,16 +35,28 @@ public class MenuLoop {
     
     public void start(Scene scene){
         //Asteroides de fondo
+        // Unos asteroides grandes
         for (int i = 0; i < numasteroides/2; i++) {
               
-              Asteroide asteroide = new Asteroide(1, ThreadLocalRandom.current().nextInt(0, (int) (scene.getWidth() + 1)),ThreadLocalRandom.current().nextInt(0, (int) (scene.getHeight() + 1)), random.nextDouble() * 2 - 1 );
+              Asteroide asteroide = new Asteroide(0, ThreadLocalRandom.current().nextInt(0, (int) (scene.getWidth() + 1)),ThreadLocalRandom.current().nextInt(0, (int) (scene.getHeight() + 1)), random.nextDouble() * 2 - 1 );
               listaasteroides.add(asteroide);
               asteroide.setVelX(random.nextDouble() * 2 - 1 );
               asteroide.setVelY(random.nextDouble() * 2 - 1 );
               rootMenu.getChildren().add(asteroide.getPolygon());
               
         }
+        // El doble de mas chicos
         for (int i = 0; i < numasteroides*2; i++) {
+            
+              Asteroide asteroide = new Asteroide(1,ThreadLocalRandom.current().nextInt(0, (int) (scene.getWidth() + 1)),ThreadLocalRandom.current().nextInt(0, (int) (scene.getHeight() + 1)), random.nextDouble() * 2 - 1 );
+              listaasteroides.add(asteroide);
+              asteroide.setVelX(random.nextDouble() * 2 - 1 );
+              asteroide.setVelY(random.nextDouble() * 2 - 1 );
+              rootMenu.getChildren().add(asteroide.getPolygon());
+              
+        }
+        // Lo mismo pero de los mas chicos
+        for (int i = 0; i < numasteroides; i++) {
             
               Asteroide asteroide = new Asteroide(2,ThreadLocalRandom.current().nextInt(0, (int) (scene.getWidth() + 1)),ThreadLocalRandom.current().nextInt(0, (int) (scene.getHeight() + 1)), random.nextDouble() * 2 - 1 );
               listaasteroides.add(asteroide);
@@ -85,7 +97,7 @@ public class MenuLoop {
         //Logotipo    
         ImageView imagenlogo = new ImageView("img/logo.png");
             imagenlogo.setFitWidth(300);
-            imagenlogo.setLayoutY(scene.getHeight()/2);
+            imagenlogo.setLayoutY(scene.getHeight()/2-39);
             imagenlogo.setLayoutX((scene.getWidth()/2)-150);
             imagenlogo.setPreserveRatio(true);
             rootMenu.getChildren().add(imagenlogo);

@@ -36,13 +36,14 @@ public class MainLoop {
     private int delayDisparo=0;
     private double velAsteroideMul = 1;
     private int numeroAsteroides = 3;
+    private int numeroCachosAsteroides = 2;
     private int vidas = 3;
     private int respawnCounter = 300;
     private boolean seguroReaparecer = true;
     private int totalNaves = 1;
     private int navesACrear = 1;
-    private int naveRespawntimer = 500;
-    private int timernave = naveRespawntimer;
+    private final int NAVE_RESPAWN_TIMER = 500;
+    private int timernave = NAVE_RESPAWN_TIMER;
     public int puntos = 0;
     private double alturaVentana;
     private double anchuraVentana;
@@ -266,7 +267,7 @@ public class MainLoop {
                     Ufo ufo = new Ufo(scene.getWidth()/2,30);
                     rootJuego.getChildren().add(ufo.getUFO());
                     ufos.add(ufo);
-                    timernave=naveRespawntimer;
+                    timernave=NAVE_RESPAWN_TIMER;
                     navesACrear--;
                 }        
             }
@@ -403,7 +404,7 @@ public class MainLoop {
     private void reducirAsteroide(Asteroide asteroidePadre){
         asteroideBUM.play();
         explosion(asteroidePadre.getPosX(), asteroidePadre.getPosY(), asteroidePadre.getRot());
-        if (asteroidePadre.getFase()<2) {
+        if (asteroidePadre.getFase()<numeroCachosAsteroides) {
             for (int i = 0; i < 2; i++) {
                 Asteroide asteroide = new Asteroide(asteroidePadre.getFase()+1, asteroidePadre.getPosX(), asteroidePadre.getPosY() , random.nextDouble() * 2 - 1 );
                 asteroide.setVelX((random.nextDouble() * 2 - 1) * velAsteroideMul);

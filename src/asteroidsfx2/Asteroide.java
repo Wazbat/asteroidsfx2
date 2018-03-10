@@ -33,20 +33,6 @@ public class Asteroide {
         switch (fase) {
             case 0:
                 polyAsteroide.getPoints().addAll(new Double[]{
-                    -192.0, -43.0,
-                    -64.0, -175.0,
-                    76.0, -161.0,
-                    176.0, -51.0,
-                    166.0, 45.0,
-                    32.0, 55.0,
-                    34.0, 169.0,
-                    -72.0, 215.0,
-                    -158.0, 167.0,
-                    -140.0, 69.0,
-                    -214.0, 9.0});
-                break;
-            case 1:
-                polyAsteroide.getPoints().addAll(new Double[]{
                     -192.0/2, -43.0/2,
                     -64.0/2, -175.0/2,
                     76.0/2, -161.0/2,
@@ -59,7 +45,7 @@ public class Asteroide {
                     -140.0/2, 69.0/2,
                     -214.0/2, 9.0/2 });
                 break;
-            case 2:
+            case 1:
                 polyAsteroide.getPoints().addAll(new Double[]{
                     0.0, 0.0,
                     -10.0/4, 70.0/4,
@@ -71,6 +57,19 @@ public class Asteroide {
                     100.0/4, 200.0/4,
                     70.0/4, 170.0/4,
                     70.0/4, 60.0/4 });
+                break;
+            case 2:
+                polyAsteroide.getPoints().addAll(new Double[]{
+                    0.0, 0.0,
+                    -10.0/6, 70.0/6,
+                    -100.0/6, 100.0/6,
+                    -70.0/6, 160.0/6,
+                    -80.0/6, 270.0/6,
+                    -30.0/6, 310.0/6,
+                    80.0/6, 250.0/6,
+                    100.0/6, 200.0/6,
+                    70.0/6, 170.0/6,
+                    70.0/6, 60.0/6 });
                 break;
             default:
                 break;
