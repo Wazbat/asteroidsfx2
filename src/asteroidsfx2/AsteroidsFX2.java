@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
@@ -29,12 +30,14 @@ public class AsteroidsFX2 extends Application {
 
     AudioClip musica = new AudioClip(Paths.get("src/mid/main.wav").toUri().toString());
     AudioClip combate = new AudioClip(Paths.get("src/mid/fight.aiff").toUri().toString());
+    
     boolean menu = true;
     @Override
     public void start(Stage primaryStage) {
         
         scene.setFill(Color.BLACK);
         primaryStage.setTitle("AsteroidsFX 2.0");
+        primaryStage.getIcons().add(new Image("file:src/img/icon.png"));
         primaryStage.setScene(scene);
         primaryStage.show();
         //Codigo del bucle del juego
@@ -43,6 +46,7 @@ public class AsteroidsFX2 extends Application {
         menuLoop.start(scene);
         
         musica.play(500);
+        combate.setCycleCount(99999);
         
         
         

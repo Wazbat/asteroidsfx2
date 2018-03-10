@@ -42,8 +42,8 @@ public class MainLoop {
     private boolean seguroReaparecer = true;
     private int totalNaves = 1;
     private int navesACrear = 1;
-    private final int NAVE_RESPAWN_TIMER = 500;
-    private int timernave = NAVE_RESPAWN_TIMER;
+    private int naveRespawnTimer = 500;
+    private int timernave = naveRespawnTimer;
     public int puntos = 0;
     private double alturaVentana;
     private double anchuraVentana;
@@ -132,10 +132,10 @@ public class MainLoop {
             Asteroide asteroideAQuitar = null;
             Explosion explosionAQuitar = null;
             Ufo ufoAQuitar = null;    
-            //Actualizacion de Asteroides
+            //Actualizacion de Asteroides, collision Nave con Asteroide
             for(Asteroide asteroideActual : listaasteroides) {
                 asteroideActual.actualizar(rootJuego);
-                if (getCollision(asteroideActual, nave)) {
+                if (getCollision(asteroideActual, nave) && !nave.getMuerto()) {
                     muerteNave();
                     asteroideAQuitar=asteroideActual;
                 }
@@ -267,7 +267,7 @@ public class MainLoop {
                     Ufo ufo = new Ufo(scene.getWidth()/2,30);
                     rootJuego.getChildren().add(ufo.getUFO());
                     ufos.add(ufo);
-                    timernave=NAVE_RESPAWN_TIMER;
+                    timernave=naveRespawnTimer;
                     navesACrear--;
                 }        
             }
@@ -375,6 +375,7 @@ public class MainLoop {
         totalNaves+=2;
         navesACrear=totalNaves;
         numeroAsteroides++;
+        naveRespawnTimer=naveRespawnTimer/4*3;
         for (int i = 0; i < numeroAsteroides; i++) {
             double x;
             double y;

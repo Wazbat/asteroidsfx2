@@ -65,6 +65,9 @@ public class MenuLoop {
               rootMenu.getChildren().add(asteroide.getPolygon());
               
         }
+//        Ufo ufo = new Ufo(scene.getWidth()/2,scene.getHeight()/2);
+//        rootMenu.getChildren().add(ufo.getUFO());
+        
         //Cambiador de estilo
         ImageView cambiaestilo = new ImageView("img/ok.png");
         cambiaestilo.setFitHeight(50);
@@ -109,6 +112,7 @@ public class MenuLoop {
                     for(Asteroide i : listaasteroides) {
                         i.actualizar(rootMenu);
                     }
+                    
                     } else{
                         first=false;
                     }

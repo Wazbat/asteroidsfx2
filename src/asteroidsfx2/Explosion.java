@@ -55,6 +55,8 @@ public void actualizar(Pane root){
         trozos.get(i).setVisible(false);
         root.getChildren().remove(trozos.get(i));
     }
+//    trozos.clear();
+// Causes index out of bounds exception??? Why?
     }
 }
 }
