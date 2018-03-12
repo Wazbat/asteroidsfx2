@@ -5,6 +5,9 @@
  */
 package asteroidsfx2;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Paths;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -17,6 +20,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
 
 /**
  *
@@ -40,10 +44,33 @@ public class AsteroidsFX2 extends Application {
         primaryStage.getIcons().add(new Image("file:src/img/icon.png"));
         primaryStage.setScene(scene);
         primaryStage.show();
+        //Si no existe el archivo de puntos, lo crea y lo llena de 10 0's
+        File archivopuntos=new File("puntuaciones.txt");
+        if (!archivopuntos.exists()) {
+            FileWriter escribidor;
+            try{
+                escribidor = new FileWriter(new File("puntuaciones.txt"));
+                for (int i = 0; i < 10; i++) {
+                    escribidor.write("0");
+                    if(i!=9){
+                        escribidor.write(System.lineSeparator());
+                    }
+                    
+                }
+                escribidor.close();
+            } catch (IOException ex){
+                ex.printStackTrace();
+            }
+            System.out.println("Archivo de Puntuacion creado");
+        }
         //Codigo del bucle del juego
         //Codigo del bucle del menu
         root.getChildren().add(menuLoop.getRoot());
         menuLoop.start(scene);
+        
+        
+
+        
         
         musica.play(500);
         

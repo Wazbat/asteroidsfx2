@@ -18,6 +18,18 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Collections;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /**
  *
@@ -303,11 +315,6 @@ public class MainLoop {
                 accelerando=true;
                 break;
             case DOWN:
-                Ufo ufo = new Ufo(50,50);
-                rootJuego.getChildren().add(ufo.getUFO());
-                ufos.add(ufo);
-                
-                
                 break;
             case LEFT:
                 rotIzq=true;
@@ -430,6 +437,47 @@ public class MainLoop {
     public void pause(){
         animacion.stop();
     }
+    public void guardarPuntos(int puntosquetenia){
+        ArrayList<Integer> puntosTemporal = new ArrayList();
+            
+        File archivoPuntos=new File("puntuaciones.txt");
+        FileInputStream fileIn;
+        try {
+            fileIn = new FileInputStream(archivoPuntos);
+            Scanner scan = new Scanner(fileIn);
+            while(scan.hasNext()){
+                puntosTemporal.add(scan.nextInt());
+            }
+            
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        
+        //Los puntos han sido agregados al arraylist, ahora agregamos el punto actual
+        puntosTemporal.add(puntosquetenia);
+        System.out.println("Ordered");
+        Collections.sort(puntosTemporal, Collections.reverseOrder());
+        // Escribe el contenido del arrayslist al archivo
+        try {
+            PrintWriter escribidor = new PrintWriter(new FileOutputStream(archivoPuntos));
+            
+            for (int i = 0; i < 10; i++){
+                if (i<9) {
+                    escribidor.println(puntosTemporal.get(i));
+                } else{
+                    escribidor.print(puntosTemporal.get(i));
+                }
+                
+            }
+            escribidor.close();
+            
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        System.out.println("Saved");
+        
+        
+    }
     public void resume(){
         animacion.start();
     }public Pane getRoot(){
@@ -449,8 +497,11 @@ public class MainLoop {
             vidas--;
             
         } else {
+            guardarPuntos(puntos);
             System.out.println("Ahora deberia hacer game over");
-            tonoGameOver.play();
+            nave.parar();
+            explosion(nave.getPosX(), nave.getPosY(), nave.getAngulo());
+            pause();
         }
         
         System.out.println(vidas+" vidas");

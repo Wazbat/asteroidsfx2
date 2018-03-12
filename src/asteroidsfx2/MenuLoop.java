@@ -6,8 +6,12 @@
 package asteroidsfx2;
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
@@ -15,6 +19,8 @@ import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 
 /**
@@ -31,6 +37,7 @@ public class MenuLoop {
     AnimationTimer animacion;
     private double alturaventana;
     private double anchuraventana;
+    Text textoPuntos = new Text();
     
     
     public void start(Scene scene){
@@ -100,19 +107,42 @@ public class MenuLoop {
         //Logotipo    
         ImageView imagenlogo = new ImageView("img/logo.png");
             imagenlogo.setFitWidth(300);
-            imagenlogo.setLayoutY(scene.getHeight()/2-39);
-            imagenlogo.setLayoutX((scene.getWidth()/2)-150);
+            
             imagenlogo.setPreserveRatio(true);
             rootMenu.getChildren().add(imagenlogo);
+            
+            
+            
+            
+        // Texto para puntos
+        textoPuntos.setText("High Scores: \n");
+        File archivoPuntos=new File("puntuaciones.txt");
+        FileInputStream fileIn;
+        try {
+            fileIn = new FileInputStream(archivoPuntos);
+            Scanner scan = new Scanner(fileIn);
+            while(scan.hasNext()){
+                textoPuntos.setText(textoPuntos.getText()+ scan.nextInt() + "\n" );
+            }
+            
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
         
+        textoPuntos.setFill(Color.WHITE);
+        rootMenu.getChildren().add(textoPuntos);
         animacion = new AnimationTimer(){
                 @Override
                 public void handle(long now) {
                     if(!first){
-                    for(Asteroide i : listaasteroides) {
-                        i.actualizar(rootMenu);
-                    }
-                    
+                        for(Asteroide i : listaasteroides) {
+                            i.actualizar(rootMenu);
+                        }
+                        //Hay que meter todo esto aqui para que se mueve con la pantalla
+                        imagenlogo.setLayoutY(scene.getHeight()/2-39);
+                        imagenlogo.setLayoutX((scene.getWidth()/2)-150);
+                        textoPuntos.relocate(scene.getWidth()/2-50, imagenlogo.getLayoutY()+100);
+                        cambiaestilo.setLayoutY(scene.getHeight()-50);
                     } else{
                         first=false;
                     }
