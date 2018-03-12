@@ -59,6 +59,8 @@ public class MainLoop {
     AudioClip tonoNuevaOla = new AudioClip(Paths.get("src/mid/newWave.wav").toUri().toString());
     AudioClip tonoGameOver = new AudioClip(Paths.get("src/mid/gameover.wav").toUri().toString());
     //private ArrayList<Escudo> listaescudos = new ArrayList();
+    AudioClip musicaintro = new AudioClip(Paths.get("src/mid/intro.wav").toUri().toString());
+    AudioClip musicaloop = new AudioClip(Paths.get("src/mid/mainloop.wav").toUri().toString());
     
     Pane rootJuego = new Pane();
     
@@ -67,8 +69,10 @@ public class MainLoop {
         anchuraVentana = scene.getWidth();
         nave.creaPlayer(anchuraVentana/2, alturaVentana/2);
         rootJuego.getChildren().addAll(nave.getPlayer(),nave.getZonaSegura());
-        
-        
+        musicaintro.play();
+        musicaloop.setCycleCount(99999);
+        musicaloop.setPriority(9999);
+        tonoDisparoNave.setPriority(1);
         
         for (int i = 0; i < numeroAsteroides; i++) {
             double x;
@@ -108,178 +112,181 @@ public class MainLoop {
             @Override
             public void handle(long now){
             if (!first){
-                
-            //Codigo para disparar, si esta disparando y no muerto    
-            if (disparando && !nave.getMuerto()) {
-                if (delayDisparo>10){
-                    delayDisparo =0;
+
+                if (!musicaintro.isPlaying() && !musicaloop.isPlaying()) {
+                    musicaloop.play();
                 }
-                if (delayDisparo<1) {
-                    Bala bala = new Bala(false, nave.getAngulo(), nave.getPosX()+5, nave.getPosY()+2, nave.getVelX(), nave.getVelY());
-                    balas.add(bala);
-                    rootJuego.getChildren().add(bala.getPolygon());
-                    tonoDisparoNave.play();
-                }
-                delayDisparo++;  
-            } else {
-                delayDisparo = 0;
-                disparando = false;
-            }    
-            //Actualizaicon del Jugador
-            nave.actualizar(rootJuego, accelerando, rotIzq, rotDir);    
-            //Variables temporales para guardar los objetos antes de eliminarlos    
-            Bala balaAQuitar = null;
-            Asteroide asteroideAQuitar = null;
-            Explosion explosionAQuitar = null;
-            Ufo ufoAQuitar = null;    
-            //Actualizacion de Asteroides, collision Nave con Asteroide
-            for(Asteroide asteroideActual : listaasteroides) {
-                asteroideActual.actualizar(rootJuego);
-                if (getCollision(asteroideActual, nave) && !nave.getMuerto()) {
-                    muerteNave();
-                    asteroideAQuitar=asteroideActual;
-                }
-            }
-            //Actualizacion de Balas, solo collision de asteroides
-            for(Iterator<Bala> iteratorBala = balas.iterator(); iteratorBala.hasNext();){
-                Bala balaActual = iteratorBala.next();
-                balaActual.actualizar(rootJuego);
-                //Collision de balas con Asteroides
-                for (Asteroide asteroideActual : listaasteroides) {
-                    if (getCollision(asteroideActual, balaActual)) {                        
-                        balaActual.getPolygon().setVisible(false);
+                //Codigo para disparar, si esta disparando y no muerto    
+                if (disparando && !nave.getMuerto()) {
+                    if (delayDisparo>15){
+                        delayDisparo =0;
+                    }
+                    if (delayDisparo<1) {
+                        Bala bala = new Bala(false, nave.getAngulo(), nave.getPosX()+5, nave.getPosY()+2, nave.getVelX(), nave.getVelY());
+                        balas.add(bala);
+                        rootJuego.getChildren().add(bala.getPolygon());
+                        tonoDisparoNave.play();
+                    }
+                    delayDisparo++;  
+                } else {
+                    delayDisparo = 0;
+                    disparando = false;
+                }    
+                //Actualizaicon del Jugador
+                nave.actualizar(rootJuego, accelerando, rotIzq, rotDir);    
+                //Variables temporales para guardar los objetos antes de eliminarlos    
+                Bala balaAQuitar = null;
+                Asteroide asteroideAQuitar = null;
+                Explosion explosionAQuitar = null;
+                Ufo ufoAQuitar = null;    
+                //Actualizacion de Asteroides, collision Nave con Asteroide
+                for(Asteroide asteroideActual : listaasteroides) {
+                    asteroideActual.actualizar(rootJuego);
+                    if (getCollision(asteroideActual, nave) && !nave.getMuerto()) {
+                        muerteNave();
                         asteroideAQuitar=asteroideActual;
-                        balaAQuitar=balaActual;
-                        rootJuego.getChildren().remove(asteroideActual.getPolygon());
-                        rootJuego.getChildren().remove(balaActual.getPolygon());
-                        
                     }
                 }
-                //Quita la bala si ya no tiene vida
-                if (balaActual.getVida() < 0) {
-                        balaActual.getPolygon().setVisible(false);
-                        iteratorBala.remove();
+                //Actualizacion de Balas, solo collision de asteroides
+                for(Iterator<Bala> iteratorBala = balas.iterator(); iteratorBala.hasNext();){
+                    Bala balaActual = iteratorBala.next();
+                    balaActual.actualizar(rootJuego);
+                    //Collision de balas con Asteroides
+                    for (Asteroide asteroideActual : listaasteroides) {
+                        if (getCollision(asteroideActual, balaActual)) {                        
+                            balaActual.getPolygon().setVisible(false);
+                            asteroideAQuitar=asteroideActual;
+                            balaAQuitar=balaActual;
+                            rootJuego.getChildren().remove(asteroideActual.getPolygon());
+                            rootJuego.getChildren().remove(balaActual.getPolygon());
+
+                        }
                     }
-            }
-            //Actualizacion de Explosiones
-            for(Explosion explosionActual : explosiones){
-                explosionActual.actualizar(rootJuego);
-                if (explosionActual.vida <= 0) {
-                    explosionAQuitar=explosionActual;
-                    
+                    //Quita la bala si ya no tiene vida
+                    if (balaActual.getVida() < 0) {
+                            balaActual.getPolygon().setVisible(false);
+                            iteratorBala.remove();
+                        }
                 }
-            }
-            
-            // Actualizacion de UFO
-            for(Ufo ufoActual : ufos){
-                ufoActual.actualizar(rootJuego);
-                //Collision de UFO con Asteroide
-                for(Asteroide asteroideActual : listaasteroides){
-                    if (getCollision(asteroideActual, ufoActual)) {
-                        explosion(asteroideActual.getPosX(),asteroideActual.getPosY(), asteroideActual.getRot());
-                        asteroideAQuitar=asteroideActual;
+                //Actualizacion de Explosiones
+                for(Explosion explosionActual : explosiones){
+                    explosionActual.actualizar(rootJuego);
+                    if (explosionActual.vida <= 0) {
+                        explosionAQuitar=explosionActual;
+
+                    }
+                }
+
+                // Actualizacion de UFO
+                for(Ufo ufoActual : ufos){
+                    ufoActual.actualizar(rootJuego);
+                    //Collision de UFO con Asteroide
+                    for(Asteroide asteroideActual : listaasteroides){
+                        if (getCollision(asteroideActual, ufoActual)) {
+                            explosion(asteroideActual.getPosX(),asteroideActual.getPosY(), asteroideActual.getRot());
+                            asteroideAQuitar=asteroideActual;
+                            explosion(ufoActual.getPosX(), ufoActual.getPosY(), random.nextInt(360));
+                            rootJuego.getChildren().remove(ufoActual.getUFO());
+                            ufoAQuitar=ufoActual;
+                        }
+                    }
+                    //Collision de UFO con Nave
+                    if (getCollision(nave, ufoActual) && !nave.getMuerto()) {
+
                         explosion(ufoActual.getPosX(), ufoActual.getPosY(), random.nextInt(360));
                         rootJuego.getChildren().remove(ufoActual.getUFO());
                         ufoAQuitar=ufoActual;
+                        muerteNave();
+
                     }
-                }
-                //Collision de UFO con Nave
-                if (getCollision(nave, ufoActual) && !nave.getMuerto()) {
-                    
-                    explosion(ufoActual.getPosX(), ufoActual.getPosY(), random.nextInt(360));
-                    rootJuego.getChildren().remove(ufoActual.getUFO());
-                    ufoAQuitar=ufoActual;
-                    muerteNave();
-                    
-                }
-                //Disparador de Nave, reducir el if para incrementar cantidad de disparos
-                if (ufoActual.getDisparoTimer() > 50) {
-                    Bala bala = new Bala(true, ufoActual.getAnguloDisparo(), ufoActual.getPosX()+30, ufoActual.getPosY()+15, ufoActual.getVelX(), ufoActual.getVelY());
-                    balas.add(bala);
-                    rootJuego.getChildren().add(bala.getPolygon());
-                    tonoDisparoUFO.play();
-                    ufoActual.setDisparoTimer(0);
-                }
-                //Collision de Balas Con solo naves y ufos, separado de la actualizacion de balas y asteroides
-                for(Bala balaActual : balas){
-                    if (getCollision(nave, balaActual) && !nave.getMuerto()) {
-                        balaActual.getPolygon().setVisible(false);
-                        balaAQuitar=balaActual;
-                        muerteNave();    
+                    //Disparador de Nave, reducir el if para incrementar cantidad de disparos
+                    if (ufoActual.getDisparoTimer() > 50) {
+                        Bala bala = new Bala(true, ufoActual.getAnguloDisparo(), ufoActual.getPosX()+30, ufoActual.getPosY()+15, ufoActual.getVelX(), ufoActual.getVelY());
+                        balas.add(bala);
+                        rootJuego.getChildren().add(bala.getPolygon());
+                        tonoDisparoUFO.play();
+                        ufoActual.setDisparoTimer(0);
                     }
-                    if (getCollision(ufoActual, balaActual)) {
-                        ufoActual.getUFO().setVisible(false);
-                        explosion(ufoActual.getPosX(), ufoActual.getPosY(), random.nextInt(360));
-                        sumaPuntuacion(400);
-                        ufoAQuitar=ufoActual;
-                        balaAQuitar=balaActual;
-                    }
-                }
-            }
-            if (balaAQuitar != null) {
-                balaAQuitar.getPolygon().setVisible(false);
-                rootJuego.getChildren().remove(balaAQuitar.getPolygon());
-                balas.remove(balaAQuitar);    
-            }
-            if (asteroideAQuitar != null) {
-                reducirAsteroide(asteroideAQuitar);
-                listaasteroides.remove(asteroideAQuitar);
-            }
-            if (ufoAQuitar != null) {
-                tonoMuerteUFO.play();
-                ufoAQuitar.getUFO().setVisible(false);
-                ufos.remove(ufoAQuitar);
-            }
-            if (explosionAQuitar != null) {
-                explosiones.remove(explosionAQuitar);    
-            }
-            
-            // Codigo para reaparecer
-            if (nave.getMuerto()) {
-                respawnCounter--;
-                nave.getPlayer().setVisible(false);
-                nave.parar();
-                
-                if (respawnCounter <= 0) {
-                    seguroReaparecer=true;
-                    for(Asteroide asteroideactual : listaasteroides){
-                        if (getCollision(asteroideactual,nave.getZonaSegura())) {
-                            seguroReaparecer=false;
+                    //Collision de Balas Con solo naves y ufos, separado de la actualizacion de balas y asteroides
+                    for(Bala balaActual : balas){
+                        if (getCollision(nave, balaActual) && !nave.getMuerto()) {
+                            balaActual.getPolygon().setVisible(false);
+                            balaAQuitar=balaActual;
+                            muerteNave();    
+                        }
+                        if (getCollision(ufoActual, balaActual)) {
+                            ufoActual.getUFO().setVisible(false);
+                            explosion(ufoActual.getPosX(), ufoActual.getPosY(), random.nextInt(360));
+                            sumaPuntuacion(400);
+                            ufoAQuitar=ufoActual;
+                            balaAQuitar=balaActual;
                         }
                     }
-                    if (seguroReaparecer) {
-                        
-                        nave.getPlayer().setVisible(true);
-                        nave.setMuerto(false);
-                        respawnCounter=400;
-                        
-                    } else{
-                        System.out.println("No esta seguro reaparecer");
-                    }
-                    
                 }
-            }
-            //Fin de codigo para reaparecer
-            //Creador de naves
-            if (navesACrear > 0) {
-                timernave--;
-                if (timernave < 0) {
-                    Ufo ufo = new Ufo(scene.getWidth()/2,30);
-                    rootJuego.getChildren().add(ufo.getUFO());
-                    ufos.add(ufo);
-                    timernave=naveRespawnTimer;
-                    navesACrear--;
-                }        
-            }
-            
-            
-            //Nueva ola
-            if (listaasteroides.isEmpty()) {
-                nuevaola();
-            }
-            
-               
-           
+                if (balaAQuitar != null) {
+                    balaAQuitar.getPolygon().setVisible(false);
+                    rootJuego.getChildren().remove(balaAQuitar.getPolygon());
+                    balas.remove(balaAQuitar);    
+                }
+                if (asteroideAQuitar != null) {
+                    reducirAsteroide(asteroideAQuitar);
+                    listaasteroides.remove(asteroideAQuitar);
+                }
+                if (ufoAQuitar != null) {
+                    tonoMuerteUFO.play();
+                    ufoAQuitar.getUFO().setVisible(false);
+                    ufos.remove(ufoAQuitar);
+                }
+                if (explosionAQuitar != null) {
+                    explosiones.remove(explosionAQuitar);    
+                }
+
+                // Codigo para reaparecer
+                if (nave.getMuerto()) {
+                    respawnCounter--;
+                    nave.getPlayer().setVisible(false);
+                    nave.parar();
+
+                    if (respawnCounter <= 0) {
+                        seguroReaparecer=true;
+                        for(Asteroide asteroideactual : listaasteroides){
+                            if (getCollision(asteroideactual,nave.getZonaSegura())) {
+                                seguroReaparecer=false;
+                            }
+                        }
+                        if (seguroReaparecer) {
+
+                            nave.getPlayer().setVisible(true);
+                            nave.setMuerto(false);
+                            respawnCounter=400;
+
+                        } else{
+                            System.out.println("No esta seguro reaparecer");
+                        }
+
+                    }
+                }
+                //Fin de codigo para reaparecer
+                //Creador de naves
+                if (navesACrear > 0) {
+                    timernave--;
+                    if (timernave < 0) {
+                        Ufo ufo = new Ufo(scene.getWidth()/2,30);
+                        rootJuego.getChildren().add(ufo.getUFO());
+                        ufos.add(ufo);
+                        timernave=naveRespawnTimer;
+                        navesACrear--;
+                    }        
+                }
+
+
+                //Nueva ola
+                if (listaasteroides.isEmpty()) {
+                    nuevaola();
+                }
+
+
+
             } else{
                 first=false;
             }

@@ -28,8 +28,8 @@ public class AsteroidsFX2 extends Application {
     StackPane root = new StackPane();
     Scene scene = new Scene(root, 1280, 720);
 
-    AudioClip musica = new AudioClip(Paths.get("src/mid/main.wav").toUri().toString());
-    AudioClip combate = new AudioClip(Paths.get("src/mid/fight.aiff").toUri().toString());
+    AudioClip musica = new AudioClip(Paths.get("src/mid/menu.wav").toUri().toString());
+    
     
     boolean menu = true;
     @Override
@@ -46,7 +46,7 @@ public class AsteroidsFX2 extends Application {
         menuLoop.start(scene);
         
         musica.play(500);
-        combate.setCycleCount(99999);
+        
         
         
         
@@ -61,7 +61,7 @@ public class AsteroidsFX2 extends Application {
             if (menu) {
                 gameStart();
                 musica.stop();
-                combate.play();
+                
                 menu=false;    
             }
             

@@ -31,7 +31,7 @@ public Explosion(double posX , double posY, double angulo, Pane root){
         0.5, 7.5,
         -0.5, 7.5});
         root.getChildren().add(trozo);
-        trozo.setFill(Color.WHITE);
+        trozo.setFill(Color.RED);
         trozo.setRotate(anguloTrozo);
         
         trozo.setLayoutX(posX);
