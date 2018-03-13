@@ -29,6 +29,9 @@ import java.util.Collections;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.geometry.Pos;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -62,12 +65,16 @@ public class MainLoop {
     public int puntos = 0;
     private double alturaVentana;
     private double anchuraVentana;
-    private ArrayList<Asteroide> listaasteroides = new ArrayList();    
-    private ArrayList<Bala> balas = new ArrayList();
-    private ArrayList<Explosion> explosiones = new ArrayList();
-    private ArrayList<Ufo> ufos = new ArrayList();
+    private final ArrayList<Asteroide> listaasteroides = new ArrayList();    
+    private final ArrayList<Bala> balas = new ArrayList();
+    private final ArrayList<Explosion> explosiones = new ArrayList();
+    private final ArrayList<Ufo> ufos = new ArrayList();
     
     private Text textoGameOver = new Text();
+    private Text textoPuntos = new Text();
+    private Text textoVidas = new Text();
+    private HBox contenedor = new HBox();
+    
     
     AudioClip tonoMuerteUFO = new AudioClip(Paths.get("src/mid/ufodeath.wav").toUri().toString());
     AudioClip tonoMuerteNave = new AudioClip(Paths.get("src/mid/death.wav").toUri().toString());
@@ -83,10 +90,27 @@ public class MainLoop {
     Pane rootJuego = new Pane();
     
     public void start(Scene scene) {
+        //Contenedor de puntos
+        textoPuntos.setFill(Color.WHITE);
+        textoVidas.setFill(Color.WHITE);
+        textoPuntos.setWrappingWidth(scene.getWidth()/4);
+        textoVidas.setWrappingWidth(scene.getWidth()/4);
+        contenedor.getChildren().addAll(textoPuntos, textoVidas);
+        contenedor.setMinWidth(scene.getWidth()/2);
+        contenedor.setMaxWidth(scene.getWidth()/2);
+        contenedor.setPrefWidth(scene.getWidth()/2);
+        contenedor.setAlignment(Pos.CENTER);
+        contenedor.setLayoutX(scene.getWidth()/4);
+        
+        rootJuego.getChildren().add(contenedor);
+        
+        
         alturaVentana = scene.getHeight();
         anchuraVentana = scene.getWidth();
+        //Crea el Jugador
         nave.creaPlayer(anchuraVentana/2, alturaVentana/2);
         rootJuego.getChildren().addAll(nave.getPlayer(),nave.getZonaSegura());
+        //Suena el sonido
         musicaintro.play();
         musicaloop.setCycleCount(99999);
         musicaintro.setPriority(2);
@@ -97,6 +121,7 @@ public class MainLoop {
         textoGameOver.setTranslateX(-textoGameOver.getWrappingWidth());
         textoGameOver.setFill(Color.WHITE);
         textoGameOver.setVisible(false);
+        
         
         rootJuego.getChildren().add(textoGameOver);
         
@@ -142,6 +167,9 @@ public class MainLoop {
                 if (!musicaintro.isPlaying() && !musicaloop.isPlaying()) {
                     musicaloop.play();
                 }
+                //Actualizador del panel Superior
+                textoPuntos.setText("Puntos: " + puntos);
+                textoVidas.setText("Vidas: " + vidas);
                 //Codigo para disparar, si esta disparando y no muerto    
                 if (disparando && !nave.getMuerto()) {
                     if (delayDisparo>15){
@@ -296,6 +324,7 @@ public class MainLoop {
                     nave.getPlayer().setVisible(false);
                     nave.parar();
                     textoGameOver.setVisible(true);
+                    textoGameOver.setText("GAME \n OVER \n \n THIS IS NOT THE WAY \n \n Puntos: " + puntos);
                     textoGameOver.relocate(rootJuego.getWidth()/2, rootJuego.getHeight()/2);
                 }
                 //Fin de codigo para reaparecer
