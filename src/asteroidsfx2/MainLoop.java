@@ -22,17 +22,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.geometry.Pos;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -43,7 +39,6 @@ import javafx.scene.text.TextAlignment;
  */
 public class MainLoop {
     private boolean first = true;
-    
     Nave nave = new Nave();
     Random random = new Random();
     AnimationTimer animacion;
@@ -62,6 +57,8 @@ public class MainLoop {
     private int navesACrear = 1;
     private int naveRespawnTimer = 500;
     private int timernave = naveRespawnTimer;
+    private int ufoDisparoInterval=50;
+    private int highScore=99999;
     public int puntos = 0;
     private double alturaVentana;
     private double anchuraVentana;
@@ -92,7 +89,9 @@ public class MainLoop {
     public void start(Scene scene) {
         //Contenedor de puntos
         textoPuntos.setFill(Color.WHITE);
+        textoPuntos.setFont(Font.font(20));
         textoVidas.setFill(Color.WHITE);
+        textoVidas.setFont(Font.font(20));
         textoPuntos.setWrappingWidth(scene.getWidth()/4);
         textoVidas.setWrappingWidth(scene.getWidth()/4);
         contenedor.getChildren().addAll(textoPuntos, textoVidas);
@@ -118,7 +117,7 @@ public class MainLoop {
         tonoDisparoNave.setPriority(1);
         textoGameOver.setText("GAME \n OVER \n \n THIS IS NOT THE WAY");
         textoGameOver.setTextAlignment(TextAlignment.CENTER);
-        textoGameOver.setTranslateX(-textoGameOver.getWrappingWidth());
+        textoGameOver.setFont(Font.font(20));
         textoGameOver.setFill(Color.WHITE);
         textoGameOver.setVisible(false);
         
@@ -128,7 +127,7 @@ public class MainLoop {
         for (int i = 0; i < numeroAsteroides; i++) {
             double x;
             double y;
-            boolean creado = false;
+            
             //Primero se aplica un valor aleatorio a la X y la Y, en las partes 20% de arriba y 20% de abajo
             if (random.nextBoolean()) {                
                 x=ThreadLocalRandom.current().nextDouble(0,(anchuraVentana * 0.2));    
@@ -143,7 +142,7 @@ public class MainLoop {
 
             Asteroide asteroide = new Asteroide(0, x, y , random.nextDouble() * 2 - 1 );
             asteroide.getPolygon().setVisible(true);
-            //Cambiar a falso
+
             listaasteroides.add(asteroide);
             asteroide.setVelX((random.nextDouble() * 2 - 1) * velAsteroideMul);
             asteroide.setVelY((random.nextDouble() * 2 - 1) * velAsteroideMul );
@@ -188,7 +187,7 @@ public class MainLoop {
                 } else {
                     delayDisparo = 0;
                     disparando = false;
-                }    
+                } 
                 //Actualizaicon del Jugador
                 nave.actualizar(rootJuego, accelerando, rotIzq, rotDir);    
                 //Variables temporales para guardar los objetos antes de eliminarlos    
@@ -257,7 +256,7 @@ public class MainLoop {
 
                     }
                     //Disparador de Nave, reducir el if para incrementar cantidad de disparos
-                    if (ufoActual.getDisparoTimer() > 50) {
+                    if (ufoActual.getDisparoTimer() > ufoDisparoInterval) {
                         Bala bala = new Bala(true, ufoActual.getAnguloDisparo(), ufoActual.getPosX()+30, ufoActual.getPosY()+15, ufoActual.getVelX(), ufoActual.getVelY());
                         balas.add(bala);
                         rootJuego.getChildren().add(bala.getPolygon());
@@ -306,6 +305,7 @@ public class MainLoop {
 
                     if (respawnCounter <= 0) {
                         seguroReaparecer=true;
+                        nave.setPosX(rootJuego.getWidth()/3);
                         for(Asteroide asteroideactual : listaasteroides){
                             if (getCollision(asteroideactual,nave.getZonaSegura())) {
                                 seguroReaparecer=false;
@@ -318,8 +318,24 @@ public class MainLoop {
                             respawnCounter=400;
 
                         } else{
-                            System.out.println("No esta seguro reaparecer");
+                            System.out.println("No esta seguro reaparecer A");
                         }
+                        nave.setPosX((rootJuego.getWidth()/3)*2);   
+                        for(Asteroide asteroideactual : listaasteroides){
+                            if (getCollision(asteroideactual,nave.getZonaSegura())) {
+                                seguroReaparecer=false;
+                            }
+                        }
+                        if (seguroReaparecer) {
+
+                            nave.getPlayer().setVisible(true);
+                            nave.setMuerto(false);
+                            respawnCounter=400;
+
+                        } else{
+                            System.out.println("No esta seguro reaparecer B");
+                        }
+                        
 
                     }
                 } else if (nave.getMuerto() && vidas<0) {
@@ -327,9 +343,12 @@ public class MainLoop {
                     nave.getPlayer().setVisible(false);
                     nave.parar();
                     textoGameOver.setVisible(true);
-                    textoGameOver.setText("GAME \n OVER \n \n THIS IS NOT THE WAY \n \n Puntos: " + puntos);
-                    textoGameOver.relocate(rootJuego.getWidth()/2, rootJuego.getHeight()/2);
+                    textoGameOver.relocate(rootJuego.getWidth()/2-100, rootJuego.getHeight()/2);
                 }
+                
+                
+                
+                
                 //Fin de codigo para reaparecer
                 //Creador de naves
                 if (navesACrear > 0) {
@@ -349,7 +368,7 @@ public class MainLoop {
                     nuevaola();
                 }
 
-
+                
 
             } else{
                 first=false;
@@ -439,19 +458,23 @@ public class MainLoop {
         nave.setPosX(rootJuego.getWidth()/2);
         nave.setPosY(rootJuego.getHeight()/2);
         totalNaves+=2;
+        numeroCachosAsteroides++;
         navesACrear=totalNaves;
         numeroAsteroides++;
+        ufoDisparoInterval=ufoDisparoInterval/5*4;
         naveRespawnTimer=naveRespawnTimer/4*3;
         for (int i = 0; i < numeroAsteroides; i++) {
             double x;
             double y;
-            
+//            boolean creado = false;
             //Primero se aplica un valor aleatorio a la X y la Y, en las partes 20% de arriba y 20% de abajo
+//            while(!creado){
             if (random.nextBoolean()) {                
                 x=ThreadLocalRandom.current().nextDouble(0,(anchuraVentana * 0.2));    
             } else {
                 x=ThreadLocalRandom.current().nextDouble(anchuraVentana * 0.8, anchuraVentana);
             }
+            
             if (random.nextBoolean()) {
                 y=ThreadLocalRandom.current().nextDouble(0,(alturaVentana * 0.2));    
             } else {
@@ -460,19 +483,28 @@ public class MainLoop {
 
             Asteroide asteroide = new Asteroide(0, x, y , random.nextDouble() * 2 - 1 );
             asteroide.getPolygon().setVisible(true);
-            //Cambiar a falso
+            //Cambiar a falso y descomentar esto. Y a arreglarlo porque los crea todos en el puto X 0 Y 0.
             listaasteroides.add(asteroide);
             asteroide.setVelX((random.nextDouble() * 2 - 1) * velAsteroideMul);
             asteroide.setVelY((random.nextDouble() * 2 - 1) * velAsteroideMul );
             rootJuego.getChildren().add(asteroide.getPolygon());
+//            if (getCollision(asteroide, nave.getZonaSegura())) {
+//                listaasteroides.remove(asteroide);
+//                System.out.println("Collision");
+//            }else{
+//                asteroide.getPolygon().setVisible(true);
+//                System.out.println("Visible");
+//                creado=true;
+//            }
+//            }
             
         }
     }
     private void reducirAsteroide(Asteroide asteroidePadre){
         asteroideBUM.play();
         explosion(asteroidePadre.getPosX(), asteroidePadre.getPosY(), asteroidePadre.getRot());
-        if (asteroidePadre.getFase()<numeroCachosAsteroides) {
-            for (int i = 0; i < 2; i++) {
+        if (asteroidePadre.getFase()<2) {
+            for (int i = 0; i < numeroCachosAsteroides; i++) {
                 Asteroide asteroide = new Asteroide(asteroidePadre.getFase()+1, asteroidePadre.getPosX(), asteroidePadre.getPosY() , random.nextDouble() * 2 - 1 );
                 asteroide.setVelX((random.nextDouble() * 2 - 1) * velAsteroideMul);
                 asteroide.setVelY((random.nextDouble() * 2 - 1) * velAsteroideMul );
@@ -489,7 +521,10 @@ public class MainLoop {
     public void pause(){
         animacion.stop();
     }
-    public void guardarPuntos(int puntosquetenia){
+    public boolean getGameOver(){
+        return vidas < -1;
+    }
+    private void guardarPuntos(int puntosquetenia){
         ArrayList<Integer> puntosTemporal = new ArrayList();
             
         File archivoPuntos=new File("puntuaciones.txt");
@@ -504,7 +539,7 @@ public class MainLoop {
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }
-        
+        highScore=puntosTemporal.get(0);
         //Los puntos han sido agregados al arraylist, ahora agregamos el punto actual
         puntosTemporal.add(puntosquetenia);
         System.out.println("Ordered");
@@ -527,6 +562,12 @@ public class MainLoop {
             ex.printStackTrace();
         }
         System.out.println("Saved");
+        textoGameOver.setText("GAME \n OVER \n \n THIS IS NOT THE WAY \n \n Puntos: " + puntos);
+        if (puntos>=highScore) {
+            textoGameOver.setText(textoGameOver.getText()+"\n NEW HIGH SCORE!");
+        } else {
+            textoGameOver.setText(textoGameOver.getText()+"\n Top: "+highScore);
+        }
         
         
     }
@@ -544,7 +585,7 @@ public class MainLoop {
             explosion(nave.getPosX(), nave.getPosY(), nave.getAngulo());
             nave.setMuerto(true);
             nave.getPlayer().setVisible(false);
-            nave.setPosX(rootJuego.getWidth()/2);
+            nave.setPosX(rootJuego.getWidth()/3);
             nave.setPosY(rootJuego.getHeight()/2);
             vidas--;
         if (vidas<0) {
