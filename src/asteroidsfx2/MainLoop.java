@@ -29,6 +29,9 @@ import java.util.Collections;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 
 /**
@@ -63,6 +66,9 @@ public class MainLoop {
     private ArrayList<Bala> balas = new ArrayList();
     private ArrayList<Explosion> explosiones = new ArrayList();
     private ArrayList<Ufo> ufos = new ArrayList();
+    
+    private Text textoGameOver = new Text();
+    
     AudioClip tonoMuerteUFO = new AudioClip(Paths.get("src/mid/ufodeath.wav").toUri().toString());
     AudioClip tonoMuerteNave = new AudioClip(Paths.get("src/mid/death.wav").toUri().toString());
     AudioClip tonoDisparoNave = new AudioClip(Paths.get("src/mid/shoot.wav").toUri().toString());
@@ -83,8 +89,16 @@ public class MainLoop {
         rootJuego.getChildren().addAll(nave.getPlayer(),nave.getZonaSegura());
         musicaintro.play();
         musicaloop.setCycleCount(99999);
-        musicaloop.setPriority(9999);
+        musicaintro.setPriority(2);
+        musicaloop.setPriority(3);
         tonoDisparoNave.setPriority(1);
+        textoGameOver.setText("GAME \n OVER \n \n THIS IS NOT THE WAY");
+        textoGameOver.setTextAlignment(TextAlignment.CENTER);
+        textoGameOver.setTranslateX(-textoGameOver.getWrappingWidth());
+        textoGameOver.setFill(Color.WHITE);
+        textoGameOver.setVisible(false);
+        
+        rootJuego.getChildren().add(textoGameOver);
         
         for (int i = 0; i < numeroAsteroides; i++) {
             double x;
@@ -254,7 +268,7 @@ public class MainLoop {
                 }
 
                 // Codigo para reaparecer
-                if (nave.getMuerto()) {
+                if (nave.getMuerto() && vidas>-1) {
                     respawnCounter--;
                     nave.getPlayer().setVisible(false);
                     nave.parar();
@@ -277,6 +291,12 @@ public class MainLoop {
                         }
 
                     }
+                } else if (nave.getMuerto() && vidas<0) {
+                    
+                    nave.getPlayer().setVisible(false);
+                    nave.parar();
+                    textoGameOver.setVisible(true);
+                    textoGameOver.relocate(rootJuego.getWidth()/2, rootJuego.getHeight()/2);
                 }
                 //Fin de codigo para reaparecer
                 //Creador de naves
@@ -487,7 +507,7 @@ public class MainLoop {
         if (!nave.getMuerto()) {
             tonoMuerteNave.play();
         }
-        if (vidas > 0) {
+        
             nave.parar();
             explosion(nave.getPosX(), nave.getPosY(), nave.getAngulo());
             nave.setMuerto(true);
@@ -495,14 +515,11 @@ public class MainLoop {
             nave.setPosX(rootJuego.getWidth()/2);
             nave.setPosY(rootJuego.getHeight()/2);
             vidas--;
-            
-        } else {
+        if (vidas<0) {
             guardarPuntos(puntos);
-            System.out.println("Ahora deberia hacer game over");
-            nave.parar();
-            explosion(nave.getPosX(), nave.getPosY(), nave.getAngulo());
-            pause();
         }
+            
+        
         
         System.out.println(vidas+" vidas");
         

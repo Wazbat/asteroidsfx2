@@ -15,12 +15,15 @@ import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 
 /**
@@ -38,6 +41,7 @@ public class MenuLoop {
     private double alturaventana;
     private double anchuraventana;
     Text textoPuntos = new Text();
+    VBox contenedor = new VBox();
     
     
     public void start(Scene scene){
@@ -109,7 +113,7 @@ public class MenuLoop {
             imagenlogo.setFitWidth(300);
             
             imagenlogo.setPreserveRatio(true);
-            rootMenu.getChildren().add(imagenlogo);
+            contenedor.getChildren().add(imagenlogo);
             
             
             
@@ -130,7 +134,12 @@ public class MenuLoop {
         }
         
         textoPuntos.setFill(Color.WHITE);
-        rootMenu.getChildren().add(textoPuntos);
+        textoPuntos.setTextAlignment(TextAlignment.CENTER);
+        textoPuntos.setTranslateX(-textoPuntos.getWrappingWidth());
+        contenedor.setAlignment(Pos.CENTER);
+        contenedor.getChildren().add(textoPuntos);
+        
+        rootMenu.getChildren().add(contenedor);
         animacion = new AnimationTimer(){
                 @Override
                 public void handle(long now) {
@@ -139,9 +148,11 @@ public class MenuLoop {
                             i.actualizar(rootMenu);
                         }
                         //Hay que meter todo esto aqui para que se mueve con la pantalla
-                        imagenlogo.setLayoutY(scene.getHeight()/2-39);
-                        imagenlogo.setLayoutX((scene.getWidth()/2)-150);
-                        textoPuntos.relocate(scene.getWidth()/2-50, imagenlogo.getLayoutY()+100);
+                        contenedor.relocate(scene.getWidth()/2-contenedor.getWidth()/2,scene.getHeight()/2-contenedor.getHeight()/2);
+//                        imagenlogo.setLayoutY(scene.getHeight()/2-39);
+//                        imagenlogo.setLayoutX((scene.getWidth()/2)-150);
+//                        textoPuntos.relocate(scene.getWidth()/2-textoPuntos.getWrappingWidth(), imagenlogo.getLayoutY()+100);
+                        
                         cambiaestilo.setLayoutY(scene.getHeight()-50);
                     } else{
                         first=false;
