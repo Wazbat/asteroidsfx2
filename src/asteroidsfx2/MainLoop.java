@@ -100,7 +100,7 @@ public class MainLoop {
         contenedor.setMaxWidth(scene.getWidth()/2);
         contenedor.setPrefWidth(scene.getWidth()/2);
         contenedor.setAlignment(Pos.CENTER);
-        contenedor.setLayoutX(scene.getWidth()/4);
+        contenedor.setLayoutX(scene.getWidth()/3);
         
         rootJuego.getChildren().add(contenedor);
         
@@ -169,7 +169,10 @@ public class MainLoop {
                 }
                 //Actualizador del panel Superior
                 textoPuntos.setText("Puntos: " + puntos);
-                textoVidas.setText("Vidas: " + vidas);
+                if (vidas>= 0) {
+                    textoVidas.setText("Vidas: " + vidas);
+                }
+                
                 //Codigo para disparar, si esta disparando y no muerto    
                 if (disparando && !nave.getMuerto()) {
                     if (delayDisparo>15){
