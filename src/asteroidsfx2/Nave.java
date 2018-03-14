@@ -31,7 +31,7 @@ public class Nave {
     private double velNaveY = 0;
     private boolean muerto = false;
     private final double POTENCIA_NAVE = 0.1;
-    private final double MAX_VELOCIDAD_NAVE = 8;
+    private final double MAX_VELOCIDAD_NAVE = 20;
     private int flash =0;
     private ArrayList<Polygon> trozos = new ArrayList();
     public void creaPlayer(double x, double y){ 
@@ -110,8 +110,8 @@ public class Nave {
         variaY=Math.cos(Math.toRadians(angulo))*-1;
         if (accelerando && !muerto ) {
             if (Math.hypot(velNaveX, velNaveY) > MAX_VELOCIDAD_NAVE) {
-                velNaveX-=POTENCIA_NAVE*(variaX*-1);
-                velNaveY-=POTENCIA_NAVE*(variaY*-1);    
+                velNaveX-=POTENCIA_NAVE*(variaX);
+                velNaveY-=POTENCIA_NAVE*(variaY);    
             }
             velNaveX+=POTENCIA_NAVE*variaX;
             velNaveY+=POTENCIA_NAVE*variaY;
@@ -172,9 +172,15 @@ public class Nave {
     }
     public void setPosX(double x){
         posX=x;
+        player.relocate(posX, posY);
+        zonaSegura.setCenterX(posX);
+        zonaSegura.setCenterY(posY);
     }
     public void setPosY(double y){
         posY=y;
+        player.relocate(posX, posY);
+        zonaSegura.setCenterX(posX);
+        zonaSegura.setCenterY(posY);
     }
     public double getAngulo(){
         return this.angulo;

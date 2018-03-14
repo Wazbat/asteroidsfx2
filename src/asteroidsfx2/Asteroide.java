@@ -78,6 +78,8 @@ public class Asteroide {
         velRot=rot;
         posX=posx;
         posY=posy;
+        polyAsteroide.setLayoutX(posX);
+        polyAsteroide.setLayoutY(posY);
     }
         
     public void actualizar(Pane root){

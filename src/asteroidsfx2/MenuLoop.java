@@ -22,6 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -119,7 +120,8 @@ public class MenuLoop {
             
             
         // Texto para puntos
-        textoPuntos.setText("High Scores: \n");
+        textoPuntos.setText("Pulsa Espacio Para Comenzar \n High Scores: \n");
+        textoPuntos.setFont(Font.font(20));
         File archivoPuntos=new File("puntuaciones.txt");
         FileInputStream fileIn;
         try {
@@ -137,6 +139,7 @@ public class MenuLoop {
         textoPuntos.setTextAlignment(TextAlignment.CENTER);
         textoPuntos.setTranslateX(-textoPuntos.getWrappingWidth());
         contenedor.setAlignment(Pos.CENTER);
+        contenedor.getChildren().removeAll();
         contenedor.getChildren().add(textoPuntos);
         
         rootMenu.getChildren().add(contenedor);

@@ -42,8 +42,8 @@ public class Bala {
         -0.5, 7.5});
         object.setFill(Color.WHITE);
         object.setRotate(angulo);
-        posX= posx;
-        posY= posy;
+        posX=posx;
+        posY=posy;
         velBalaX = velx+velBala*variaX;
         velBalaY = vely+velBala*variaY;
     }

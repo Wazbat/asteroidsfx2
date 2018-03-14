@@ -90,8 +90,9 @@ public class AsteroidsFX2 extends Application {
                 musica.stop();
                 
                 menu=false;    
+            } 
+            switch (event.getCode()) {   
             }
-            
             });
 
         scene.setOnKeyReleased((KeyEvent event) -> {
@@ -113,5 +114,20 @@ public class AsteroidsFX2 extends Application {
         
                 
     }
-    
+    private void reinitializar(){
+        mainLoop.getRoot().setVisible(false);
+        menuLoop.getRoot().setVisible(false);
+        mainLoop=null;
+        menuLoop=null;
+        MainLoop mainLoop = new MainLoop();
+        MenuLoop menuLoop = new MenuLoop();
+        root.getChildren().add(menuLoop.getRoot());
+        root.getChildren().add(mainLoop.getRoot());
+        menuLoop.start(scene);
+        musica.stop();
+        musica.play();
+        menu=true;
+        menuLoop.getRoot().setVisible(true);
+        menuLoop.start(scene);
+    }
 }
