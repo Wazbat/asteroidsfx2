@@ -46,6 +46,7 @@ public class MenuLoop {
     
     
     public void start(Scene scene){
+        rootMenu.setId("root");
         //Asteroides de fondo
         // Unos asteroides grandes
         for (int i = 0; i < numasteroides/2; i++) {

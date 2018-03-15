@@ -54,7 +54,7 @@ public class MainLoop {
     private int respawnCounter = 300;
     private boolean seguroReaparecer = true;
     private int totalNaves = 1;
-    private int navesACrear = 1;
+    private int navesACrear = totalNaves;
     private int naveRespawnTimer = 500;
     private int timernave = naveRespawnTimer;
     private int ufoDisparoInterval=50;
@@ -87,6 +87,7 @@ public class MainLoop {
     Pane rootJuego = new Pane();
     
     public void start(Scene scene) {
+        rootJuego.setId("root");
         //Contenedor de puntos
         textoPuntos.setFill(Color.WHITE);
         textoPuntos.setFont(Font.font(20));
@@ -298,7 +299,7 @@ public class MainLoop {
                 }
 
                 // Codigo para reaparecer
-                if (nave.getMuerto() && vidas>-1) {
+                if (nave.getMuerto() && vidas>=0) {
                     respawnCounter--;
                     nave.getPlayer().setVisible(false);
                     nave.parar();
@@ -319,7 +320,7 @@ public class MainLoop {
 
                         } else{
                             System.out.println("No esta seguro reaparecer A");
-                        }
+                        
                         nave.setPosX((rootJuego.getWidth()/3)*2);   
                         for(Asteroide asteroideactual : listaasteroides){
                             if (getCollision(asteroideactual,nave.getZonaSegura())) {
@@ -335,7 +336,7 @@ public class MainLoop {
                         } else{
                             System.out.println("No esta seguro reaparecer B");
                         }
-                        
+                        }
 
                     }
                 } else if (nave.getMuerto() && vidas<0) {
@@ -562,11 +563,11 @@ public class MainLoop {
             ex.printStackTrace();
         }
         System.out.println("Saved");
-        textoGameOver.setText("GAME \n OVER \n \n THIS IS NOT THE WAY \n \n Puntos: " + puntos);
+        textoGameOver.setText("GAME\nOVER\n\nTHIS IS NOT THE WAY\n \nPuntos: " + puntos);
         if (puntos>=highScore) {
-            textoGameOver.setText(textoGameOver.getText()+"\n NEW HIGH SCORE!");
+            textoGameOver.setText(textoGameOver.getText()+"\nNEW HIGH SCORE!");
         } else {
-            textoGameOver.setText(textoGameOver.getText()+"\n Top: "+highScore);
+            textoGameOver.setText(textoGameOver.getText()+"\nTop: "+highScore);
         }
         
         

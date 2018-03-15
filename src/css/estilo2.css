@@ -7,7 +7,9 @@ and open the template in the editor.
     Created on : 09-Feb-2018, 14:08:47
     Author     : Wazbat
 */
-
+#root{
+    -fx-background-image:url("../img/background.jpg");
+}
 
 #nave{
    -fx-fill: black; 
@@ -36,6 +38,6 @@ and open the template in the editor.
    -fx-stroke: red;  
 }
 #asteroide{
-   -fx-fill: black; 
-   -fx-stroke: red;  
+   -fx-fill: white;
+   -fx-stroke: red;   
 }
